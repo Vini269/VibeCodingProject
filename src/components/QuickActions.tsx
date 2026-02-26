@@ -1,15 +1,27 @@
 import { AlertTriangle, Pill, Heart, Plus, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+interface Props {
+  onBookAppointment: () => void;
+  onLogVitals: () => void;
+  onAddPrescription: () => void;
+}
+
 const actions = [
-  { icon: AlertTriangle, label: "Emergency Rx", description: "Request urgent prescription", color: "bg-destructive/10 text-destructive hover:bg-destructive/15" },
-  { icon: Pill, label: "Find Pharmacy", description: "Locate nearby pharmacies", color: "bg-primary/10 text-primary hover:bg-primary/15" },
-  { icon: Heart, label: "Log Vitals", description: "Update your vital signs", color: "bg-success/10 text-success hover:bg-success/15" },
-  { icon: Plus, label: "Book Appointment", description: "Schedule a new visit", color: "bg-info/10 text-info hover:bg-info/15" },
-  { icon: Phone, label: "Telehealth", description: "Start a video call", color: "bg-warning/10 text-warning hover:bg-warning/15" },
+  { icon: AlertTriangle, label: "Emergency Rx", description: "Request urgent prescription", color: "bg-destructive/10 text-destructive hover:bg-destructive/15", action: "emergency" },
+  { icon: Pill, label: "Add Prescription", description: "Add a new prescription", color: "bg-primary/10 text-primary hover:bg-primary/15", action: "prescription" },
+  { icon: Heart, label: "Log Vitals", description: "Update your vital signs", color: "bg-success/10 text-success hover:bg-success/15", action: "vitals" },
+  { icon: Plus, label: "Book Appointment", description: "Schedule a new visit", color: "bg-info/10 text-info hover:bg-info/15", action: "appointment" },
+  { icon: Phone, label: "Telehealth", description: "Start a video call", color: "bg-warning/10 text-warning hover:bg-warning/15", action: "telehealth" },
 ];
 
-const QuickActions = () => {
+const QuickActions = ({ onBookAppointment, onLogVitals, onAddPrescription }: Props) => {
+  const handleClick = (action: string) => {
+    if (action === "appointment") onBookAppointment();
+    else if (action === "vitals") onLogVitals();
+    else if (action === "prescription") onAddPrescription();
+  };
+
   return (
     <div className="rounded-xl border border-border/50 bg-card p-5">
       <h3 className="text-base font-semibold text-card-foreground mb-4">Quick Actions</h3>
@@ -17,6 +29,7 @@ const QuickActions = () => {
         {actions.map((action, i) => (
           <button
             key={action.label}
+            onClick={() => handleClick(action.action)}
             className={cn(
               "flex items-center gap-3 rounded-lg p-3 transition-all text-left animate-slide-in",
               action.color
